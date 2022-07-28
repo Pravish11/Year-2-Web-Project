@@ -159,7 +159,7 @@
 			var btnid="#btn"+id;
 			var btn=$(btnid);
 			var cmail=$(".coach_select").val();
-			var dateSelect=btn.nextAll("input:first").val();
+			var dateSelect=btn.text();
 			$.ajax({
 				url:"getCoachTime.php",
 				method:"POST",

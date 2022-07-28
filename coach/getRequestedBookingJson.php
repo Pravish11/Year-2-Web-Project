@@ -5,9 +5,8 @@
     };
     require 'vendor/autoload.php';
 	require_once "includes/db_connect.php";
-    $coach_mail=$_SESSION['username'];
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $sql="SELECT b.*,u.firstname,u.lastname,w.name FROM bookings b,user_details u,workout_plans w WHERE b.member_mail=u.email AND b.coach_mail='$coach_mail' AND status='pending' AND b.workout_id=w.workout_id ORDER BY date,time_range";
+    $sql="SELECT b.*,u.firstname,u.lastname,w.name FROM bookings b,user_details u,workout_plans w WHERE b.member_mail=u.email AND status='pending' AND b.workout_id=w.workout_id ORDER BY date,time_range";
     $Result=$conn->query($sql);
     $result_array=$Result->fetchAll(PDO::FETCH_ASSOC);
     $schema=Schema::fromJsonString(file_get_contents(__DIR__ . "/schemas/jsonSchemaBookingRequest.json"));
@@ -18,7 +17,7 @@
     if($result->isValid())
     {
         header('Content-Type: application/json'); 
-		echo json_encode($result_array);
+		echo json_encode($data1);
     }
     else
     {

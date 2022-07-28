@@ -1,5 +1,6 @@
 <?php
 session_start();
+$mail=$_SESSION['username'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -70,6 +71,7 @@ session_start();
           }
         }
       }); 
+      $(".action_row").hide();
     });
     function sessDisplay(id)
     {
@@ -335,10 +337,19 @@ session_start();
   <br><br><br>
   <h2 style="color:green;" id="book_req">Booking Requests:</h2>
   <?php
-  $url="http://localhost/ExtremeFitness/coach/getRequestedBookingJson.php";
+  $url="http://localhost/ExtremeFitness/coach/getRequestedBookingJson.php"."?=mail".$_SESSION['username'];
   $json=file_get_contents($url);
   $obj=json_decode($json,false);
-  if(sizeof($obj)==0)
+  $found=false;
+  foreach($obj as $result)
+  {
+    if($result->coach_mail==$mail)
+    {
+      $found=true;
+      break;
+    }
+  }
+  if(!$found)
   {
     echo "<br><br><h3 style='text-align:center'>No current requests.</h3>";
   }
@@ -357,6 +368,10 @@ session_start();
     $count=1;
     foreach($obj as $result)
     {
+      if($result->coach_mail==$mail)
+      {
+
+      
       ?>
       
         <tr class="rows" <?php echo "id=req_row".$count; ?> onclick='reqDisplay(<?php echo $count; ?>)'>
@@ -401,16 +416,16 @@ session_start();
        </tr>   
       <?php
       $count++;
+        }
     }
     ?>
     </tbody>
       </table>
       <?php 
   }
-  ?>
-
-  
+  ?>  
   </div>
+  
 </body>
 
 </html>

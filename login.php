@@ -71,7 +71,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST")
             else
             {
                 $found=false;
-                $Msg= '<h4 style="color:red; text-align:left">Error: Wrong credentials.<br/> Try again or make sure you are a registered user!</h4>';
+                $Msg= '<h4 style="color:red; text-align:left">Error: Wrong password.<br/> Try again or make sure you are a registered user!</h4>';
             }
         }
         else

@@ -1,7 +1,6 @@
 <?php
     session_start();
-    require_once "includes/db_connect.php";
-	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+ 
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -67,7 +66,7 @@
             left: 550px;
             bottom: 90%;
             padding: 50px;
-            height:710px;
+            height:740px;
             font-size: 16px;
         }
         input[type='radio'],select
@@ -120,11 +119,18 @@
         background-color: rgb(6,0,255);
         color: white;
        }
+       .clear_btn{
+        cursor:pointer;
+       }
     
     </style>
     <script>
         $(document).ready(function(){
-            $(".start_btn").hide();
+            $('form').hide();
+            $("#add_coach_btn").click(function(){
+                $(".start_btn").hide(1100);
+                $("form").fadeIn(1200);
+            });
             $("input[name='txt_firstname'],input[name='txt_lastname']").focusout(function(){
                 var f=$("input[name='txt_firstname']").val().toLowerCase();
                 var l=$("input[name='txt_lastname']").val().toLowerCase();
@@ -154,28 +160,161 @@
             });
             $("#reg_btn").click(function(){
                 var fn=$("input[name='txt_firstname']").val();
-                var ln=$("input[name='lastname']").val();
+                var ln=$("input[name='txt_lastname']").val();
                 var d=$("input[name='txt_dob']").val();
                 var tel=$("input[name='txt_tel_no']").val();
+                var add=$("input[name='txt_address']").val();
                 var gen=$("input[name='txt_gender']:checked").val();
                 var spec=$('#spec_select').val();
                 var mail=$("input[name='txt_email']").val();
                 var pw=$("input[name='txt_password']").val();
                 var workday="";
                 var firstAdd=false;
-                var radio="input[name='Mon']";
                 var timeDay="";
-                if($radio.is(':checked'))
+                var radio="input[name='Mon']";
+                if($(radio).is(':checked'))
                 {
-                    if(firstAdd)
+                    if(!firstAdd)
                     {
-                        workout+=$(radio).val();
+                        workday+=$(radio).attr("name");
+                        timeDay+=$("input[name='mon_from']").val()+"-"+$("input[name='mon_to']").val();
+                        firstAdd=true;
+
+                    }
+                    else
+                    {
+                        workday+="|"+$(radio).attr("name");   
+                        timeDay+="|"+$("input[name='mon_from']").val()+"-"+$("input[name='mon_to']").val();
                     }
                 }
-                alert(x);
+                var radio="input[name='Tue']";
+                if($(radio).is(':checked'))
+                {
+                    
+                    if(!firstAdd)
+                    {
+                        workday+=$(radio).attr("name");
+                        timeDay+=$("input[name='tue_from']").val()+"-"+$("input[name='tue_to']").val();
+                        firstAdd=true;
 
+                    }
+                    else
+                    {
+                        workday+="|"+$(radio).attr("name");   
+                        timeDay+="|"+$("input[name='tue_from']").val()+"-"+$("input[name='tue_to']").val();
+                    }
+                }
+                var radio="input[name='Wed']";
+                if($(radio).is(':checked'))
+                {
+                    
+                    if(!firstAdd)
+                    {
+                        workday+=$(radio).attr("name");
+                        timeDay+=$("input[name='wed_from']").val()+"-"+$("input[name='wed_to']").val();
+                        firstAdd=true;
+
+                    }
+                    else
+                    {
+                        workday+="|"+$(radio).attr("name");   
+                        timeDay+="|"+$("input[name='wed_from']").val()+"-"+$("input[name='wed_to']").val();
+                    }
+                }
+                var radio="input[name='Thu']";
+                if($(radio).is(':checked'))
+                {
+                    
+                    if(!firstAdd)
+                    {
+                        workday+=$(radio).attr("name");
+                        timeDay+=$("input[name='thu_from']").val()+"-"+$("input[name='thu_to']").val();
+                        firstAdd=true;
+
+                    }
+                    else
+                    {
+                        workday+="|"+$(radio).attr("name");   
+                        timeDay+="|"+$("input[name='thu_from']").val()+"-"+$("input[name='thu_to']").val();
+                    }
+                }
+                var radio="input[name='Fri']";
+                if($(radio).is(':checked'))
+                {
+                    
+                    if(!firstAdd)
+                    {
+                        workday+=$(radio).attr("name");
+                        timeDay+=$("input[name='fri_from']").val()+"-"+$("input[name='fri_to']").val();
+                        firstAdd=true;
+
+                    }
+                    else
+                    {
+                        workday+="|"+$(radio).attr("name");   
+                        timeDay+="|"+$("input[name='fri_from']").val()+"-"+$("input[name='fri_to']").val();
+                    }
+                }
+                var radio="input[name='Sat']";
+                if($(radio).is(':checked'))
+                {
+                    
+                    if(!firstAdd)
+                    {
+                        workday+=$(radio).attr("name");
+                        timeDay+=$("input[name='sat_from']").val()+"-"+$("input[name='sat_to']").val();
+                        firstAdd=true;
+
+                    }
+                    else
+                    {
+                        workday+="|"+$(radio).attr("name");   
+                        timeDay+="|"+$("input[name='sat_from']").val()+"-"+$("input[name='sat_to']").val();
+                    }
+                }
+                var radio="input[name='Sun']";
+                if($(radio).is(':checked'))
+                {
+                    
+                    if(!firstAdd)
+                    {
+                        workday+=$(radio).attr("name");
+                        timeDay+=$("input[name='sun_from']").val()+"-"+$("input[name='sun_to']").val();
+                        firstAdd=true;
+
+                    }
+                    else
+                    {
+                        workday+="|"+$(radio).attr("name");   
+                        timeDay+="|"+$("input[name='sun_from']").val()+"-"+$("input[name='sun_to']").val();
+                    }
+                }
+                $.ajax({
+                    url:"storeCoachAjax.php",
+                    method:"POST",
+                    data:{email:mail,firstname:fn,lastname:ln,dob:d,tel_no:tel,address:add,gender:gen,password:pw,working_day:workday,working_time:timeDay,specialisation:spec},
+                    error:function(xhr)
+                    {
+                        alert(xhr.statusText);
+                    },
+                    success:function()
+                    {
+                        $('form').hide(1100);
+                        $('.start_btn').show(1200);
+                    }
+                }); 
+            });
+            $("#clear_all_btn").click(function(){
+                    $(".roaster_table input[type='radio']").prop("checked",false);
+                    $(".roaster_table input").val("");
             });
         });
+        function clearSection(id)
+        {
+            var row="#row"+id;
+            $(row+" input[type='radio']").prop("checked",false);
+            $(row+" input").val("");
+        }
     </script>
 </head>
 
@@ -238,7 +377,7 @@
                     <td>Working Day</td>
                     <td>Working Hours</td>
                 </tr>
-                <tr>
+                <tr id="row1">
                     <td>
                         <label class="day_label">Monday</label>
                         <input type="radio" name="Mon"> 
@@ -249,11 +388,12 @@
                         <label class="to_label time_label">To:</label>
                         <input type="text" class="time_input" name="mon_to"><br>
                     </td>
+                    <td><button type="button" class="clear_btn" id="btn1" onclick="clearSection('1')">Clear</button></td>
                 </tr>
-                <tr>
+                <tr id="row2">
                 <td>
                         <label class="day_label">Tuesday</label>
-                        <input type="radio" name="Ton"> 
+                        <input type="radio" name="Tue"> 
                     </td>
                     <td>
                         <label class="from_label time_label">From:</label>
@@ -261,8 +401,9 @@
                         <label class="to_label time_label">To:</label>
                         <input type="text" class="time_input" name="tue_to"><br>
                     </td>
+                    <td><button type="button" class="clear_btn" id="btn2" onclick="clearSection('2')">Clear</button></td>
                 </tr>
-                <tr>
+                <tr id="row3">
                 <td>
                         <label class="day_label">Wednesday</label>
                         <input type="radio" name="Wed"> 
@@ -273,8 +414,9 @@
                         <label class="to_label time_label">To:</label>
                         <input type="text" class="time_input" name="wed_to"><br>
                     </td>
+                    <td><button type="button" class="clear_btn" id="btn3" onclick="clearSection('3')">Clear</button></td>
                 </tr>
-                <tr>
+                <tr id="row4">
                 <td>
                         <label class="day_label">Thursday</label>
                         <input type="radio" name="Thu"> 
@@ -285,8 +427,9 @@
                         <label class="to_label time_label">To:</label>
                         <input type="text" class="time_input" name="thu_to"><br>
                     </td>
+                    <td><button type="button" class="clear_btn" id="btn4" onclick="clearSection('4')">Clear</button></td>
                 </tr>
-                <tr>
+                <tr id="row5">
                 <td>
                         <label class="day_label">Friday</label>
                         <input type="radio" name="Fri"> 
@@ -297,8 +440,9 @@
                         <label class="to_label time_label">To:</label>
                         <input type="text" class="time_input" name="fri_to"><br>
                     </td>
+                    <td><button type="button" class="clear_btn" id="btn5" onclick="clearSection('5')">Clear</button></td>
                 </tr>
-                <tr>
+                <tr id="row6">
                 <td>
                         <label class="day_label">Saturday</label>
                         <input type="radio" name="Sat"> 
@@ -309,8 +453,9 @@
                         <label class="to_label time_label">To:</label>
                         <input type="text" class="time_input" name="sat_to"><br>
                     </td>
+                    <td><button type="button" class="clear_btn" id="btn6" onclick="clearSection('6')">Clear</button></td>
                 </tr>
-                <tr>
+                <tr id="row7">
                 <td>
                         <label class="day_label">Sunday</label>
                         <input type="radio" name="Sun"> 
@@ -321,6 +466,12 @@
                         <label class="to_label time_label">To:</label>
                         <input type="text" class="time_input" name="sun_to"><br>
                     </td>
+                    <td><button type="button" class="clear_btn" id="btn7" onclick="clearSection('7')">Clear</button></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td><button class="clear_btn" id="clear_all_btn" type="button">Clear All</button></td>
                 </tr>
             </table><br>
         <button class="end_btn" id="cancel_btn" type="button">Cancel</button>
