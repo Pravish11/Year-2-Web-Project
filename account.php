@@ -462,7 +462,7 @@
 			cursor: pointer;
 		}
 		.pwd_btn{
-			weight: 100px;
+			width: 100px;
 			height: 25px;
 			position: relative;
 			left: 30%;
