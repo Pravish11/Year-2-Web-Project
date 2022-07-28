@@ -18,6 +18,7 @@ session_start();
         <?php
         $activemenu="coach";
         include('includes/menu.php');
+        echo "hello world";
         ?>
 
 
