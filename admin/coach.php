@@ -153,8 +153,8 @@
     </style>
     <script>
         $(document).ready(function(){
-            $('form').hide();
-            $('.search').hide();
+            //$('form').hide();
+            //$('.search').hide();
             //$('.start_btn').hide();
             $("#error_msg").hide();
             $("#add_coach_btn").click(function(){
@@ -343,8 +343,10 @@
                 $(".start_btn").fadeIn(1200);
             });
             $("input[name='search_mail']").focusin(function(){
-                $(this).val('@xtremefitness.com');
-               
+                if($(this).val()=="")
+                {
+                    $(this).val('@xtremefitness.com');
+                } 
             }); 
             $("#search_btn").click(function(){
                 var mail=$("input[name='search_mail']").val();
