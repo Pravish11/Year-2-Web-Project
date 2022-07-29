@@ -122,11 +122,41 @@
        .clear_btn{
         cursor:pointer;
        }
+       .search{
+        display: inline-block;
+        position: relative;
+        right: 160px;
+        text-align: center;
+        top:200px;
+       }
+       .search input{
+        border:2px solid var(--color-info-dark);
+        border-radius: 15px;
+        height: 30px;
+        width: 250px;
+        padding: 10px;
+        display: block;
+        margin:auto;
+       }
+       .search button{
+        position: relative;
+        left: 140px;
+        bottom: 26px;
+        cursor: pointer;
+       }
+       .search #searchIcon {
+        font-size: 23px;
+        background: var(--color-background);
+        
+       }
     
     </style>
     <script>
         $(document).ready(function(){
             $('form').hide();
+            $('.search').hide();
+            //$('.start_btn').hide();
+            $("#error_msg").hide();
             $("#add_coach_btn").click(function(){
                 $(".start_btn").hide(1100);
                 $("form").fadeIn(1200);
@@ -308,6 +338,41 @@
                     $(".roaster_table input[type='radio']").prop("checked",false);
                     $(".roaster_table input").val("");
             });
+            $("#cancel_btn").click(function(){
+                $("form").fadeOut(1100);
+                $(".start_btn").fadeIn(1200);
+            });
+            $("input[name='search_mail']").focusin(function(){
+                $(this).val('@xtremefitness.com');
+               
+            }); 
+            $("#search_btn").click(function(){
+                var mail=$("input[name='search_mail']").val();
+                $.ajax({
+                    url:"searchCoachAjax.php",
+                    method:"POST",
+                    data:{email:mail},
+                    error:function(xhr)
+                    {
+                        alert(xhr.statusText);
+                    },
+                    success:function(data)
+                    {
+                        if(data)
+                        {
+                            alert("success");
+                        }
+                        else
+                        {
+                            $("#error_msg").show();
+                        }
+                    }
+                });
+            });
+            $("#update_coach_btn").click(function(){
+                $('.start_btn').hide(1200);
+                $('.search').show(1300);
+            });
         });
         function clearSection(id)
         {
@@ -333,6 +398,14 @@
         <button class="start_btn" id="add_coach_btn"><i class="bi bi-person-plus"> </i>Add Coach</button>
         <button class="start_btn" id="update_coach_btn"><i class="bi bi-pencil-square"></i> Update Info/Roaster</button>
         </div>
+        <div class="search">
+            <h2>Enter the coach email</h2>
+            <input type="text" name="search_mail">
+            <button id="search_btn" type="button"><i id="searchIcon" class="bi bi-search"></i></button><br><br><br><br>
+            <h3 style="font-size:15px;"id="error_msg">No coach found. Please try again</h3>
+        </div>
+        
+        
         <form action="" class="input_form">
             <label class="items name_label" for="">Firstname:</label>
             <input type="text" name="txt_firstname">
