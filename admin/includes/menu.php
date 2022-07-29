@@ -7,7 +7,10 @@ $count=0;
 while ($value=$result->fetch())
 {
     $count++;
-}    
+}
+$sql="SELECT * FROM review WHERE flag='1'";
+$result=$conn->query($sql);
+$review_count=$result->rowCount();    
 ?>
     <aside>
         <div class="top">
@@ -46,7 +49,8 @@ while ($value=$result->fetch())
 					{
 						echo "class='active'";
 					} 
-				?> ><span class="material-icons-sharp">reviews</span><h3>Reviews</h3></a>
+				?> ><span class="material-icons-sharp">reviews</span><h3>Reviews</h3>
+				<span class="message-count"><?php echo $review_count;?></span></a>
             
 
             <a href="message.php" <?php
