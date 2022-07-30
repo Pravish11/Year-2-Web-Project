@@ -18,17 +18,35 @@ $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 <body>
     <div class="container">
         <?php
-        $activemenu="home";
-        include "includes/menu.php";
-        $fNameQuery = "SELECT user_details.firstname FROM user_details WHERE email='".$_SESSION['username']."'";
+        $activemenu = "home";
+        include('includes/menu.php');
+
+        $fNameQuery = "SELECT user_details.firstname FROM user_details WHERE email='" . $_SESSION['username'] . "'";
         $nameResult = $conn->query($fNameQuery);
         $fName = $nameResult->fetch(PDO::FETCH_ASSOC);
+
+        $monthlyQuery = "SELECT * FROM membership WHERE type='monthly'";
+        $monthlyResult = $conn->query($monthlyQuery);
+        $monthly = 0;
+        while ($monthlyResult->fetch()) {
+            $monthly++;
+        }
+
+        $yearlyQuery = "SELECT * FROM membership WHERE type='yearly'";
+        $yearlyResult = $conn->query($yearlyQuery);
+        $yearly = 0;
+        while ($yearlyResult->fetch()) {
+            $yearly++;
+        }
+
+        $percentageMonthly = ($monthly / ($monthly + $yearly)) * 100;
+        $percentageYearly = ($yearly / ($monthly + $yearly)) * 100;
         ?>
         <main>
             <h1>Xtreme Fitness Dashboard</h1>
             <div class="date">
-                <?php 
-                    echo date("l")." ".date("d/m/y");
+                <?php
+                echo date("l") . " " . date("d/m/y");
                 ?>
             </div>
 
@@ -39,14 +57,14 @@ $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     <div class="middle">
                         <div class="left">
                             <h3>Monthly users</h3>
-                            <h1>100</h1>
+                            <h1><?php echo $monthly; ?></h1>
                         </div>
                         <div class="progress">
                             <svg>
                                 <circle cx='38' cy='38' r='36'></circle>
                             </svg>
                             <div class="number">
-                                <p>81%</p>
+                                <p><?php echo round($percentageMonthly, 1) . " %"; ?></p>
                             </div>
                         </div>
 
@@ -63,14 +81,14 @@ $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     <div class="middle">
                         <div class="left">
                             <h3>Yearly users</h3>
-                            <h1>100</h1>
+                            <h1><?php echo $yearly; ?></h1>
                         </div>
                         <div class="progress">
                             <svg>
                                 <circle cx='38' cy='38' r='36'></circle>
                             </svg>
                             <div class="number">
-                                <p>81%</p>
+                                <p><?php echo round($percentageYearly, 1) . " %"; ?></p>
                             </div>
                         </div>
 
@@ -86,14 +104,14 @@ $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     <div class="middle">
                         <div class="left">
                             <h3>Total users</h3>
-                            <h1>100</h1>
+                            <h1><?php echo $yearly + $monthly; ?></h1>
                         </div>
                         <div class="progress">
                             <svg>
                                 <circle cx='38' cy='38' r='36'></circle>
                             </svg>
                             <div class="number">
-                                <p>81%</p>
+                                <p>100%</p>
                             </div>
                         </div>
 
@@ -119,37 +137,39 @@ $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Tom Sawyer</td>
-                            <td>24 July 2022</td>
-                            <td>Rs 3000</td>
-                            <td class="warning">Pending</td>
-                            <td class="primary">Details</td>
-                        </tr>
-
-                        <tr>
-                            <td>Tom Holland</td>
-                            <td>24 July 2022</td>
-                            <td>Rs 3000</td>
-                            <td class="warning">Pending</td>
-                            <td class="primary">Details</td>
-                        </tr>
-
-                        <tr>
-                            <td>Tom Mauritius</td>
-                            <td>24 July 2022</td>
-                            <td>Rs 3000</td>
-                            <td class="warning">Pending</td>
-                            <td class="primary">Details</td>
-                        </tr>
-
-                        <tr>
-                            <td>Tom Curepipe</td>
-                            <td>24 July 2022</td>
-                            <td>Rs 3000</td>
-                            <td class="danger">Due</td>
-                            <td class="primary">Details</td>
-                        </tr>
+                        <?php
+                            $paymentQuery = "SELECT membership.type,membership.membership_end,user_details.firstname,user_details.lastname
+                                            FROM membership,user_details
+                                            WHERE membership.email=user_details.email
+                                            ORDER BY membership.membership_end";
+                            $paymentResult = $conn->query($paymentQuery);
+                            while ($value = $paymentResult->fetch()) { 
+                                $date=$value['membership_end'];
+                                if((($date>=date("Y-m-d")) && ($date<=date('Y-m-d', strtotime('+7 day', strtotime($date))))) || ($date<date("Y-m-d")))
+                                {?>
+                                    <tr>
+                                        <td><?php echo $value['firstname']." ".$value['lastname'];?></td>
+                                        <td><?php echo $value['membership_end'];?></td>
+                                        <td><?php if($value['type']=="monthly")
+                                            {
+                                                echo "Rs 1149.00";
+                                            }
+                                            else
+                                            {
+                                                echo "Rs 1049.00";
+                                            }
+                                        ?></td>
+                                        <?php if ($date<date("Y-m-d")){
+                                            echo '<td class="danger">Due</td>';
+                                        }
+                                        else{
+                                            echo '<td class="warning">Pending</td>';
+                                        }
+                                            ?>
+                                            <td class="primary">Details</td>
+                                    </tr>
+                        <?php }
+                        } ?>
                     </tbody>
                 </table>
                 <a href="#">Show All</a>
@@ -176,36 +196,26 @@ $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             <div class="recent-updates">
                 <h2>Recent Comments</h2>
                 <div class="updates">
+                    <?php
+                    $recentQuery = "SELECT review.review_id,review.date_posted,review.rating,review.comment,user_details.firstname,user_details.lastname
+                                    FROM review,user_details
+                                    WHERE review.member_mail=user_details.email
+                                    ORDER BY date_posted DESC
+                                    LIMIT 3";
+                    $recentResult = $conn->query($recentQuery);
+                    while ($value = $recentResult->fetch()) { ?>
+                
                     <div class="update">
                         <div class="profile-photo">
                             <span class="material-icons-sharp">account_circle</span>
                         </div>
                         <div class="message">
-                            <p><b>Mike Tyzong</b> commented bad gym</p>
-                            <small class="text-muted">2 min ago</small>
+                            <p><b><?php echo $value['firstname']." ".$value['lastname'];?></b> <?php echo $value['comment'];?></p>
+                            <small class="text-muted"><?php echo $value['date_posted']; ?></small>
                         </div>
                     </div>
 
-                    <div class="update">
-                        <div class="profile-photo">
-                            <span class="material-icons-sharp">account_circle</span>
-                        </div>
-                        <div class="message">
-                            <p><b>Mike Remapart </b>commented bad gym</p>
-                            <small class="text-muted">2 min ago</small>
-                        </div>
-                    </div>
-
-
-                    <div class="update">
-                        <div class="profile-photo">
-                            <span class="material-icons-sharp">account_circle</span>
-                        </div>
-                        <div class="message">
-                            <p><b>Mike Montagne </b>commented bad gym</p>
-                            <small class="text-muted">2 min ago</small>
-                        </div>
-                    </div>
+                    <?php } ?>
 
                 </div>
             </div>

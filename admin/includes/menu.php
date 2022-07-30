@@ -50,7 +50,15 @@ $review_count=$result->rowCount();
 						echo "class='active'";
 					} 
 				?> ><span class="material-icons-sharp">reviews</span><h3>Reviews</h3>
-				<span class="message-count"><?php echo $review_count;?></span></a>
+				<?php
+					if($review_count>0)
+					{
+						?>
+						<span class="message-count" id="revCount"><?php echo $review_count;?></span>
+						<?php
+					} 
+				?>
+				</a>
             
 
             <a href="message.php" <?php
@@ -59,7 +67,15 @@ $review_count=$result->rowCount();
 						echo "class='active'";
 					} 
 				?> ><span class="material-icons-sharp">mail_outline</span><h3>Message</h3>
-            <span class="message-count"><?php echo $count;?></span>
+				<?php
+					if($count>0)
+					{
+						?>
+						 <span class="message-count" id="msgCount"><?php echo $count;?></span>
+						 <?php
+					} 
+				?>
+           
         </a>
             
 

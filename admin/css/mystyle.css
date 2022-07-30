@@ -209,6 +209,9 @@ aside .sidebar a.active{
     color: var(--color-primary);
     margin-left: 0;
 }
+aside .sidebar a.active .message-count{
+    color: white;
+}
 
 aside .sidebar a.active:before{
     content:'';
