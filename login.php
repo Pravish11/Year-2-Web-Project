@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+
 if (!isset($_GET['referer']))
 {
 	$_SESSION['email']="";
@@ -52,6 +53,29 @@ if($_SERVER["REQUEST_METHOD"]=="POST")
                     header("Location:admin/index.php");
                     die();
                 }
+                $sql="SELECT * FROM membership WHERE email='$email'";
+                $x=$conn->query($sql);
+                $res=$x->fetch();
+                $a=getdate();
+                $b=date_create($a['year']."-".$a['mon']."-".$a['mday']);
+                $currentDate=date_format($b,'Y-m-d'); 
+                if($res['membership_end']!=null)
+                {
+                    
+                    $c=date_create($res['membership_end']);
+                    $date=date_format($c,"Y-m-d");
+                    if($date<=$currentDate)
+                    {
+                      
+                        header("Location:payment.php");
+                        die();
+                    }
+                }
+                else
+                {
+                    header("Location:payment.php");
+                    die();
+                }
                 $query = "SELECT * FROM user_details WHERE email='$email'";
                 $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 $result=$conn->query($query);
@@ -66,7 +90,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST")
                     header('Location: '.$_SESSION['redirectURL']);
                 }
                 //header("Location: home.php");
-                die();
+                //die();
             }
             else
             {

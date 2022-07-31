@@ -74,6 +74,7 @@
 								<div class="logged_drpdwn">
 									<li><a href="logout.php">Logout</a></li>
 									<li><a href="account.php">Account Settings</a></li>
+									<li><a href="workout.php">Workouts</a></li>
 								</div>
 							</ul>
 						</li>

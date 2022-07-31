@@ -581,7 +581,7 @@
 			$conn->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 			$detail_msg="";
 			//update table user details
-			$sQuery='CALL updateUserDetails(:current_email,:lastname,:firstname,:dob,:address,:tel_no,:gender)';
+			$sQuery='CALL updateUserDetails(:current_email,:lastname,:firstname,:dob,:address,:tel_no,:gender,:old_mail)';
             $stmt=$conn->prepare($sQuery);
             $stmt->bindParam(':current_email',$current_email);
 			$stmt->bindParam(':lastname',$lastname);
@@ -590,6 +590,7 @@
 			$stmt->bindParam(':address',$address);
 			$stmt->bindParam(':tel_no',$tel_no);
 			$stmt->bindParam(':gender',$gender);
+			$stmt->bindParam(":old_mail",$current_email);
 
 			$current_email=$email;
             $lastname=($submission['lastname']);
