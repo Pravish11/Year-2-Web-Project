@@ -2,7 +2,7 @@
     require_once "includes/db_connect.php";
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $coach_mail=$_POST['email'];
-    $coach_mail='al.james@xtremefitness.com';
+    //$coach_mail='al.james@xtremefitness.com';
     $sql="SELECT u.*,c.specialisation,w.working_day,w.working_time FROM user_details u,coach c,working_hours w WHERE u.email=c.email AND u.email=w.coach_mail AND u.email='$coach_mail'";
     $x=$conn->query($sql);
     if($x->rowCount()==0)
