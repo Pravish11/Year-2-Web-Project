@@ -3,7 +3,7 @@
 	require_once "includes/db_connect.php";
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$_SESSION['redirectURL'] = $_SERVER['REQUEST_URI'];
-	$email='kevinMoo@gmail.com';
+	$email=$_POST['username'];
 	
 ?>
 <!DOCTYPE html>
