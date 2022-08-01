@@ -1,6 +1,6 @@
 <?php 
 	session_start();
-	$email='kevinMoo@gmail.com';
+	$email=$_SESSION['username'];
 	require_once "includes/db_connect.php";
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$sQuery="SELECT * FROM membership WHERE email='$email'";
@@ -81,7 +81,7 @@
 			date_add($b,date_interval_create_from_date_string("1 years"));
 			$membership_end=date_format($b,'Y-m-d');
 		}
-		$sql="UPDATE membership SET membership_end='$membership_end'";
+		$sql="UPDATE membership SET membership_end='$membership_end' WHERE email='$email'";
 		$conn->exec($sql);
 		$query = "SELECT * FROM user_details WHERE email='$email'";
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
