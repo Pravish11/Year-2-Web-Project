@@ -164,7 +164,7 @@
                     success:function(data)
                     {
                         $('.search').after(data);
-                        $('.search').fadeout(500,function(){
+                        $('.btns').fadeOut(500,function(){
                             $(".input_form").fadeIn();
                         })
 
